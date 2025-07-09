@@ -1,13 +1,12 @@
 "use client";
+import RequestCard from "@/app//components/RequestCard";
+import StatusCodeDisplay from "@/app//components/StatusCodeDisplay";
 import { dataMap } from "@/app/data";
 import { Card, Flex, Grid, ScrollArea } from "@radix-ui/themes";
 import dynamic from "next/dynamic";
-import RequestCard from "@/app//components/RequestCard";
+import React, { useState } from "react";
 
 const ReactJson = dynamic(() => import("react-json-view"), { ssr: false });
-import StatusCodeDisplay from "@/app//components/StatusCodeDisplay";
-import React from "react";
-import { useEffect, useRef, useState } from "react";
 
 export default function AutoPage({
   params,
@@ -30,7 +29,7 @@ export default function AutoPage({
           />
         ))}
       </Flex>
-      <Flex p="5" className="sticky top-0  h-screen">
+      <Flex p="5" className="sticky top-0 h-screen">
         <Card className="w-full">
           {!result && "请点击左侧发送请求"}{" "}
           {result && (
