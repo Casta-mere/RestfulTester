@@ -13,7 +13,11 @@ import {
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import * as Collapsible from "@radix-ui/react-collapsible";
+import { TbSquareRoundedChevronDown } from "react-icons/tb";
+import { TbSquareRoundedChevronUp } from "react-icons/tb";
 
+import "./styles.css";
 interface FormValues {
   args: Record<string, string>;
 }
@@ -45,6 +49,7 @@ const RequestButton = ({ item, isLoading }: props_button) => {
 };
 
 const RequestCard = ({ item, onResult }: props) => {
+  const [open, setOpen] = useState(true);
   const { register, handleSubmit } = useForm<FormValues>({
     defaultValues: { args: item.args ?? {} },
   });
@@ -117,43 +122,53 @@ const RequestCard = ({ item, onResult }: props) => {
   };
 
   return (
-    <Card size="1">
-      <Flex justify="between" direction="column">
-        <Flex>
-          <Heading>
-            <Text
-              style={{
-                background: `linear-gradient(var(--color-indigo-300)) no-repeat left 123% / 100% 48%`,
-              }}
-              className="font-semibold"
-            >
-              {item.note}
+    <Collapsible.Root open={open} onOpenChange={setOpen}>
+      <Card size="1">
+        <Collapsible.Trigger asChild>
+          <Flex justify="between" align="center" p="3" className="items-center">
+            <Heading>
+              <Text
+                style={{
+                  background: `linear-gradient(var(--color-indigo-300)) no-repeat left 123% / 100% 48%`,
+                }}
+                className="font-semibold"
+              >
+                {item.note}
+              </Text>
+            </Heading>
+            <Text size="6">
+              {open ? (
+                <TbSquareRoundedChevronUp />
+              ) : (
+                <TbSquareRoundedChevronDown />
+              )}
             </Text>
-          </Heading>
-        </Flex>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 mt-4">
-          <Flex direction="column" gap="3">
-            {Object.entries(item.args || {}).map(([key, value]) => (
-              <Grid columns="2" key={key}>
-                <Text>{key}</Text>
-
-                <TextField.Root
-                  placeholder={key}
-                  defaultValue={value}
-                  {...register(`args.${key}`)}
-                >
-                  <TextField.Slot />
-                </TextField.Root>
-              </Grid>
-            ))}
-            <Flex justify="center">
-              <RequestButton item={item} isLoading={isLoading} />
-            </Flex>
           </Flex>
-        </form>
-      </Flex>
-    </Card>
+        </Collapsible.Trigger>
+
+        <Collapsible.Content className="CollapsibleContent">
+          <form onSubmit={handleSubmit(onSubmit)} className=" px-5">
+            <Flex direction="column" gap="3">
+              {Object.entries(item.args || {}).map(([key, value]) => (
+                <Grid columns="2" key={key}>
+                  <Text>{key}</Text>
+                  <TextField.Root
+                    placeholder={key}
+                    defaultValue={value}
+                    {...register(`args.${key}`)}
+                  >
+                    <TextField.Slot />
+                  </TextField.Root>
+                </Grid>
+              ))}
+              <Flex justify="center">
+                <RequestButton item={item} isLoading={isLoading} />
+              </Flex>
+            </Flex>
+          </form>
+        </Collapsible.Content>
+      </Card>
+    </Collapsible.Root>
   );
 };
 
