@@ -15,7 +15,9 @@ export default function AutoPage({
 }) {
   const [result, setResult] = useState<any>(null);
   const resolvedParams = React.use(params);
-  const requestList = dataMap[resolvedParams.name] || [];
+  const group = dataMap[resolvedParams.name];
+  const requestList = group?.items || [];
+
   return (
     <Grid columns="2">
       <Flex direction="column" gap="3" p="5">
